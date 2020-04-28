@@ -1,4 +1,5 @@
 from datetime import timedelta
+from datetime import date
 
 # The DAG object; we'll need this to instantiate a DAG
 from airflow import DAG
@@ -32,7 +33,7 @@ default_args = {
     # 'trigger_rule': 'all_success'
 }
 dag = DAG(
-    'postgres-test-DAG',
+    'postgres-test-DAG'+date.today().__str__(),
     default_args=default_args,
     description='Querying a postgres db',
     schedule_interval=timedelta(days=1),
