@@ -1,19 +1,21 @@
+import os
 from datetime import timedelta
 from os import listdir
 
-import yaml
 # The DAG object; we'll need this to instantiate a DAG
-from airflow import DAG
 # Operators; we need this to operate!
+
+# debug
+import yaml
+from airflow import DAG
 from airflow.operators.postgres_operator import PostgresOperator
 from airflow.utils.dates import days_ago
 
-# debug
-for f in listdir("."):
+for f in listdir(os.path.join(os.path.split(__file__)[0]+"")):
     print(f)
 
 # Import configuration
-with open("./postgres-test-DAG.yaml", "r") as config:
+with open(os.path.join(os.path.split(__file__)[0] + "/" + "postgres-test-DAG.yaml"), "r") as config:
     cfg = yaml.load(config)
 for section in cfg:
     print(section)
