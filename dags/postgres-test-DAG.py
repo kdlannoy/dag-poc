@@ -1,11 +1,17 @@
 from datetime import timedelta
-from datetime import date
 
+import yaml
 # The DAG object; we'll need this to instantiate a DAG
 from airflow import DAG
 # Operators; we need this to operate!
 from airflow.operators.postgres_operator import PostgresOperator
 from airflow.utils.dates import days_ago
+
+# Import configuration
+with open("postgres-test-DAG.yaml", "r") as config:
+    cfg = yaml.load(config)
+for section in cfg:
+    print(section)
 
 # These args will get passed on to each operator
 # You can override them on a per-task basis during operator initialization
@@ -13,7 +19,7 @@ default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
     'start_date': days_ago(2),
-    'email': ['airflow@example.com'],
+    'email': [cfg['dag']['email']],
     'email_on_failure': False,
     'email_on_retry': False,
     'retries': 1,
@@ -33,7 +39,7 @@ default_args = {
     # 'trigger_rule': 'all_success'
 }
 dag = DAG(
-    'postgres-test-DAG'+date.today().__str__(),
+    'postgres-test-DAG-' + cfg['env'],
     default_args=default_args,
     description='Querying a postgres db',
     schedule_interval=timedelta(days=1),

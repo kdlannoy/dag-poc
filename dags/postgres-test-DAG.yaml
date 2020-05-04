@@ -1,0 +1,4 @@
+env: DEV
+dag:
+  description: Querying a postgres db
+  email: kiani.lannoye@ae.be
