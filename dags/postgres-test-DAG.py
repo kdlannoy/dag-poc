@@ -2,16 +2,16 @@ import os
 from datetime import timedelta
 from os import listdir
 
-# The DAG object; we'll need this to instantiate a DAG
-# Operators; we need this to operate!
-
 # debug
 import yaml
 from airflow import DAG
 from airflow.operators.postgres_operator import PostgresOperator
 from airflow.utils.dates import days_ago
 
-for f in listdir(os.path.join(os.path.split(__file__)[0]+"")):
+# The DAG object; we'll need this to instantiate a DAG
+# Operators; we need this to operate!
+
+for f in listdir(os.path.join(os.path.split(__file__)[0] + "")):
     print(f)
 
 # Import configuration
@@ -19,6 +19,7 @@ with open(os.path.join(os.path.split(__file__)[0] + "/" + "postgres-test-DAG.yam
     cfg = yaml.load(config)
 for section in cfg:
     print(section)
+
 
 # These args will get passed on to each operator
 # You can override them on a per-task basis during operator initialization
@@ -83,14 +84,14 @@ create_table = \
 create_table_op = PostgresOperator(
     task_id='create_table_if_not_exists',
     sql=create_table,
-    postgres_conn_id='POSTGRES_DATA',
+    postgres_conn_id='POSTGRES_DATA_' + cfg['env'],
     dag=dag
 )
 
 create_open_opp = PostgresOperator(
     task_id='create_open_opp',
     sql=do_query,
-    postgres_conn_id='POSTGRES_DATA',
+    postgres_conn_id='POSTGRES_DATA_' + cfg['env'],
     dag=dag)
 
 create_table_op >> create_open_opp
